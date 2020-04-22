@@ -51,7 +51,6 @@ end;$$;
 ALTER TABLE messages ALTER COLUMN body TYPE VARCHAR(51);
 # or
 DROP INDEX messages_body_idx;
-#
 ################################################################
 
 # terminal 3
@@ -82,7 +81,7 @@ CREATE INDEX messages_body_idx ON messages(body);
 update messages set body = 'value' where id=1;
 update messages set body = 'value' where id=2;
 update messages set body = 'value' where id=3;
-#######################################################################
+################################################################
 
 # Test case for ShareRowExclusiveLock
 CREATE OR REPLACE FUNCTION totalRecords() RETURNS integer AS $total$
@@ -95,12 +94,12 @@ END;
 $total$ LANGUAGE plpgsql;
 
 CREATE TRIGGER check_total_records BEFORE UPDATE ON messages FOR EACH ROW EXECUTE PROCEDURE totalRecords();
-#######################################################################
+################################################################
 
 # Test case for ExclusiveLock
 CREATE MATERIALIZED VIEW messages_top_5_view AS SELECT messages.id,messages.body from messages limit 1000000;
 CREATE UNIQUE INDEX messages_top_5_view_idx ON messages_top_5_view(id);
 drop materialized view messages_top_5_view;
 refresh materialized view concurrently messages_top_5_view;
-#######################################################################
+################################################################
 ```
